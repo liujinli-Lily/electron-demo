@@ -1,4 +1,4 @@
-import { app, BrowserWindow, globalShortcut, ipcMain } from 'electron' // eslint-disable-line
+import { app, BrowserWindow, globalShortcut, ipcMain, Tray, Menu } from 'electron' // eslint-disable-line
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';// eslint-disable-line
 /**
  * Set `__static` path to static files in production
@@ -56,14 +56,37 @@ app.on('ready', async () => {
             }
         }
     }
-
     globalShortcut.register('CommandOrControl+Shift+i', () => {
         mainWindow.webContents.openDevTools();
     });
     createWindow();
+
+    // 设置托盘
+    const tray = new Tray('./src/renderer/assets/icon_tray.png');
+    // 设置托盘菜单
+    const trayContextMenu = Menu.buildFromTemplate([
+        {
+            label: '打开',
+            click: () => {
+                mainWindow.show();
+            },
+        }, {
+            label: '退出',
+            click: () => {
+                app.quit();
+            },
+        },
+    ]);
+    tray.setToolTip('myApp');
+    tray.on('click', () => {
+        mainWindow.show();
+    });
+    tray.on('right-click', () => {
+        tray.popUpContextMenu(trayContextMenu);
+    });
 });
 
-app.setUserModelId('com.electron.my-project');
+// app.setUserModelId('com.electron.my-project');
 app.on('will-quit', () => {
     // 注销快捷键
     globalShortcut.unregister('CommandOrControl+i');
@@ -86,7 +109,8 @@ app.on('activate', () => {
 
 
 ipcMain.on('close', () => {
-    mainWindow.close();
+    // mainWindow.close();
+    mainWindow.hide();
 });
 
 ipcMain.on('minimize', () => {

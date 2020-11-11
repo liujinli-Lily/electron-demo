@@ -19,11 +19,12 @@
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
     "test": "npm run unit && npm run e2e",
     "unit": "karma start test/unit/karma.conf.js",
-    "postinstall": "npm run lint:fix"
+    "postinstall": "npm run lint:fix",
+    "bd": "yarn build && electron-builder"
   },
   "build": {
     "productName": "my-project",
-    "appId": "com.example.yourapp",
+    "appId": "com.app.electronvue",
     "directories": {
       "output": "build"
     },
@@ -49,7 +50,7 @@
       "icon": "build/icons/icon.icns"
     },
     "win": {
-      "icon": "build/icons/icon.ico"
+      "icon": "build/icons/bridge_favicon.ico"
     },
     "linux": {
       "icon": "build/icons"
