@@ -1,5 +1,6 @@
-import { app, BrowserWindow, globalShortcut, ipcMain, Tray, Menu } from 'electron' // eslint-disable-line
+import { app, BrowserWindow, globalShortcut, ipcMain, Tray, Menu, Notification } from 'electron' // eslint-disable-line
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';// eslint-disable-line
+import path from 'path';
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -43,7 +44,31 @@ function createWindow() {
         // 通知web页面更改图标
         mainWindow.webContents.send('unmaximize', mainWindow.isMaximized()); // 主进程发送信息到渲染进程。
     });
+
+    // 缩略图工具栏
+    mainWindow.setThumbarButtons([
+        {
+            tooltip: 'button1',
+            icon: path.join(__dirname, './src/renderer/assets/icon_tray.png'),
+            click() { console.log('button1 clicked'); },
+        }, {
+            tooltip: 'button2',
+            icon: path.join(__dirname, './src/renderer/assets/icon_tray.png'),
+            flags: ['enabled', 'dismissonclick'],
+            click() { console.log('button2 clicked.'); },
+        },
+    ]);
 }
+
+// 消息通知，必须在安装应用程序中
+function showNotification() {
+    const notification = {
+        title: 'Basic Notification',
+        body: 'Notification from the Main process',
+    };
+    new Notification(notification).show();
+}
+
 
 app.on('ready', async () => {
     if (isDevelopment && !process.env.IS_TEST) {
@@ -56,10 +81,13 @@ app.on('ready', async () => {
             }
         }
     }
+    // 快捷键
     globalShortcut.register('CommandOrControl+Shift+i', () => {
         mainWindow.webContents.openDevTools();
     });
     createWindow();
+
+    showNotification();
 
     // 设置托盘
     const tray = new Tray('./src/renderer/assets/icon_tray.png');
@@ -106,7 +134,17 @@ app.on('activate', () => {
         createWindow();
     }
 });
-
+// window 弹出列表
+app.setUserTasks([
+    {
+        program: process.execPath,
+        arguments: '--new-window',
+        iconPath: process.execPath,
+        iconIndex: 0,
+        title: 'New Window',
+        description: 'Create a new window',
+    },
+]);
 
 ipcMain.on('close', () => {
     // mainWindow.close();

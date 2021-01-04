@@ -27,6 +27,14 @@
                 <span>send</span>
             </div>
         </div>
+        <div class="menu-item" @click="openCalendarWindow">
+            <div>
+                <span class="el-icon-message-solid"/>
+            </div>
+            <div>
+                <span>open</span>
+            </div>
+        </div>
     </div>
 </template>
 
