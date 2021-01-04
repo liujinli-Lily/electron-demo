@@ -30,6 +30,9 @@ npm install -g yarn
 
 ```
 [参考文档](https://blog.csdn.net/David1025/article/details/104371208)
+[electron-vue-music](https://github.com/SmallRuralDog/electron-vue-music.git)
+[CoCoMusic](https://github.com/xtuJSer/CoCoMusic)
+
 
  问题记录
  1. 运行项目后窗口展示文件浏览器，原因是eslint报错，可按照eslint规则修改文件后再次运行，或者在electron-vue目录下3个webpack配置文件，关闭eslinit检查
